@@ -1,5 +1,5 @@
 {
-  "name": "pns-helper",
+  "name": "common",
   "version": "1.0.0",
   "description": "",
   "main": "common.js",
@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "xmlbuilder": "^8.2.2",
-    "constants" : "git+https://makedonski:levski02@repository.secure.ifao.net:7443/scm/ux/pns-constants.git"
+    "constants" : "git+https://makedonski@repository.secure.ifao.net:7443/scm/ux/pns-constants.git"
   },
   "author": "",
   "license": "ISC"
