@@ -8,7 +8,7 @@
   },
   "dependencies": {
     "xmlbuilder": "^8.2.2",
-    "constants" : "git+https://levski02:makedonski@repository.secure.ifao.net:7443/scm/ux/pns-constants.git"
+    "constants" : "git+https://makedonski:levski02@repository.secure.ifao.net:7443/scm/ux/pns-constants.git"
   },
   "author": "",
   "license": "ISC"
