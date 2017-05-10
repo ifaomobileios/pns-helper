@@ -77,11 +77,14 @@ exports.createXmlNotification = function(/** {Object} */ msg ){
     data['message-code'] = messageCode;
     
     union( data, msg.body );
+
+	console.log(xmlbuilder)
     
     var xmlMsg =  xmlbuilder.create();
+console.log(root)
     var root = xmlMsg.begin('notification', {'version': '1.0'});
     obj2xmlfragment( root, data );
-    
+    console.log(xmlMsg.toString())
     return xmlMsg.toString();
 };
 
