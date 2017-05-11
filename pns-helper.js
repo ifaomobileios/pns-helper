@@ -1,5 +1,5 @@
 var  xmlbuilder = require('xmlbuilder')
-    , notificationCodes = require('constants').notification_codes
+	,notificationCodes = require('pns-constants').notification_codes;
     
 function get_code_for_notification_code(code){
     if( code ){
@@ -78,23 +78,19 @@ exports.createXmlNotification = function(/** {Object} */ msg ){
     
     union( data, msg.body );
 
-	console.log(xmlbuilder)
-    
-    var xmlMsg =  xmlbuilder.create();
-console.log(root)
-    var root = xmlMsg.begin('notification', {'version': '1.0'});
-    obj2xmlfragment( root, data );
-    console.log(xmlMsg.toString())
-    return xmlMsg.toString();
+    var xmlMsg =  xmlbuilder.create('notification')
+
+    obj2xmlfragment(xmlMsg, data);
+
+    return xmlMsg.end().toString();
 };
 
 exports.createXmlDocument = function(/** {Object} */ msg, /** {String} */ rootNode ){
-    var xmlBuilder = xmlbuilder.create()
-      , root = xmlBuilder.begin( rootNode, {'version': '1.0'} );
+    var xmlBuilder = xmlbuilder.create(rootNode);
 
-    obj2xmlfragment( root, msg );
+    obj2xmlfragment( xmlBuilder, msg );
 
-    return xmlBuilder.toString();
+    return xmlBuilder.end().toString();
 }
 
 function obj2xmlfragment( node, obj ){

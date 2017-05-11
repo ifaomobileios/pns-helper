@@ -1,14 +1,14 @@
 {
-  "name": "common",
+  "name": "pns-helper",
   "version": "1.0.0",
   "description": "",
-  "main": "common.js",
+  "main": "pns-helper.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "xmlbuilder": "^8.2.2",
-    "constants" : "git+https://makedonski:levski02@repository.secure.ifao.net:7443/scm/ux/pns-constants.git"
+    "pns-constants": "git+https://makedonski:levski02@repository.secure.ifao.net:7443/scm/ux/pns-constants.git",
+    "xmlbuilder": "^8.2.2"
   },
   "author": "",
   "license": "ISC"
