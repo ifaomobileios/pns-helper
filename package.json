@@ -7,7 +7,7 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "dependencies": {
-    "pns-constants": "git+https://makedonski:levski98@repository.secure.ifao.net:7443/scm/ux/pns-constants.git",
+    "pns-constants": "git+https://makedonski:levski97@repository.secure.ifao.net:7443/scm/ux/pns-constants.git",
     "xmlbuilder": "^8.2.2"
   },
   "author": "",
