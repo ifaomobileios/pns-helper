@@ -1,5 +1,5 @@
 var  xmlbuilder = require('xmlbuilder')
-	,notificationCodes = require('pns-constants').notification_codes;
+	,notificationCodes = require('/home/pns-app/settings/main/pns-constants').notification_codes;
     
 function get_code_for_notification_code(code){
     if( code ){
