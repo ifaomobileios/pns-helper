@@ -1,61 +1,52 @@
-var  xmlbuilder = require('xmlbuilder')
-	,notificationCodes = require('/src/settings/pns-constants.js').notification_codes;
-    
-function get_code_for_notification_code(code){
-    if( code ){
-        return notificationCodes[code.toUpperCase()];
-    }else{
-        return "";
-    }
+const xmlbuilder = require('xmlbuilder');
+const notificationCodes = require('/src/settings/pns-constants.js').notification_codes;
+
+function generateLocKey(eventType, subEvent){
+	let template = '';	
+	let eventTypeAndSubEvent = `${eventType} ${subEvent || ""}`;
+	let eventTypeAndSubEventPascalCase = ucwords( eventTypeAndSubEvent.replace(/_/g, ' ').toLowerCase() ).replace(/ /g, '');
+	
+	switch (eventType) {
+		case "FLIGHTSTATS_ALERT" :
+		case "EXPENSE_STATEMENT" :
+		case "UPLOAD_RECEIPT" :
+			template = `Notification${eventTypeAndSubEventPascalCase}Key`;
+			break;
+
+		default:
+			template = `NotificationBooking${eventTypeAndSubEventPascalCase}Key`;
+	}
+	
+	return template;
 }
 
-/**
- * @return {Object} JavaScript Object
- */
-
 exports.createIosNotification = function(/** {Object} */ msg ){
-    var msgType = msg.body.eventType
-        , messageCode = get_code_for_notification_code(msgType)
-        , IPHONE_LOCALIZED_BOOKING_STRING_PREFIX = "NotificationBooking"
-        , IPHONE_LOCALIZED_FLIGHTSTATS_STRING_PREFIX = "Notification"
-        , IPHONE_LOCALIZED_STRING_SUFFIX = "Key"
-        , event = msg.body
-        , localizedStringKey
-        ;
-
-    if( msg.body.eventDescription ){
-        // description as exact message
-        aps = {
-            alert: msg.body.eventDescription
-        };
-    }else{
-        var loaclizedStringPrefix;
-        switch (msg.body.eventType) {
-            case "FLIGHTSTATS_ALERT" :
-                msgType = msgType + " " + event.payload.event;
-                loaclizedStringPrefix = IPHONE_LOCALIZED_FLIGHTSTATS_STRING_PREFIX;
-                break;
-
-            default:
-                loaclizedStringPrefix = IPHONE_LOCALIZED_BOOKING_STRING_PREFIX;
-        }
-        msgType = ucwords( msgType.replace(/_/g, ' ').toLowerCase() ).replace(/ /g, '');
-        localizedStringKey = loaclizedStringPrefix + msgType + IPHONE_LOCALIZED_STRING_SUFFIX;
-        var arguments = 'args' in event ? event.args.arg : null;
-        aps = {
-            alert: {
-                'loc-key' : localizedStringKey
-              , 'loc-args' : arguments
-            }
-        };
-    }
+	let event = msg.body;
+	let payload = msg.body.payload || null;
+    let eventType = msg.body.eventType;
+	let aps = {
+		alert: {}
+	};
+	
+	if( msg.body.eventDescription ){
+		aps.alert = event.eventDescription;
+		aps.alert["loc-key"] ? aps.alert["loc-key"] = generateLocKey(eventType, payload.event || null) : delete aps.alert["loc-key"];
+		aps.alert["mutable-content"] ? aps.alert["mutable-content"] = 1 : delete aps.alert["mutable-content"];
+	} else {
+		let localizedStringKey = generateLocKey(eventType, payload.event || null);
+		
+		aps.alert = {
+			...(localizedStringKey && {"loc-key": localizedStringKey}),
+			...(event.args && {"loc-args": event.args.arg}),
+		};
+	};
 
     // for fetching data in backgroud
     aps["content-available"] = 1;
     
     return {
-          aps : aps
-        , payload : event.payload
+          aps : aps,
+          payload : event.payload
     };
 };
 
@@ -64,15 +55,15 @@ exports.createIosNotification = function(/** {Object} */ msg ){
  */
 
 exports.createXmlNotification = function(/** {Object} */ msg ){
-    var msgType = msg.body.eventType
+    var eventType = msg.body.eventType
         , data = {}
-        , messageCode = get_code_for_notification_code(msgType);
+        , messageCode = get_code_for_notification_code(eventType);
         
     if( msg.body.eventDescription ){
         // description as exact message
         data.message = msg.body.eventDescription;
     }else{
-        data.message = msgType;
+        data.message = eventType;
     }
     data['message-code'] = messageCode;
     
@@ -212,4 +203,10 @@ function getTimestamp() {
     return timestamp.toISOString();
 }
 
-exports.getTimestamp = getTimestamp;
+function get_code_for_notification_code(code){
+    if( code ){
+        return notificationCodes[code.toUpperCase()];
+    }else{
+        return "";
+    }
+}
