@@ -24,16 +24,17 @@ exports.createIosNotification = function(/** {Object} */ msg ){
 	let event = msg.body;
 	let payload = msg.body.payload || null;
     let eventType = msg.body.eventType;
+    let subEvent = payload ? payload.event : null;
 	let aps = {
 		alert: {}
-	};
+    };
 	
 	if( msg.body.eventDescription ){
 		aps.alert = event.eventDescription;
-		aps.alert["loc-key"] ? aps.alert["loc-key"] = generateLocKey(eventType, payload.event || null) : delete aps.alert["loc-key"];
+		aps.alert["loc-key"] ? aps.alert["loc-key"] = generateLocKey(eventType, subEvent || null) : delete aps.alert["loc-key"];
 		aps.alert["mutable-content"] ? aps.alert["mutable-content"] = 1 : delete aps.alert["mutable-content"];
 	} else {
-		let localizedStringKey = generateLocKey(eventType, payload.event || null);
+		let localizedStringKey = generateLocKey(eventType, subEvent || null);
 		
 		aps.alert = {
 			...(localizedStringKey && {"loc-key": localizedStringKey}),
