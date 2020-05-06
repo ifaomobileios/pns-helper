@@ -63,6 +63,7 @@ exports.createXmlNotification = function(/** {Object} */ msg ){
     if( msg.body.eventDescription ){
         // description as exact message
         data.message = msg.body.eventDescription;
+        delete msg.body.eventDescription;
     }else{
         data.message = eventType;
     }
