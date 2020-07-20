@@ -33,7 +33,7 @@ exports.createIosNotification = function(/** {Object} */ msg ){
 		aps.alert = event.eventDescription;
 		aps.alert["loc-key"] ? aps.alert["loc-key"] = generateLocKey(eventType, subEvent || null) : delete aps.alert["loc-key"];
         aps.alert["mutable-content"] ? (aps["mutable-content"] = 1, delete aps.alert["mutable-content"]) : delete aps.alert["mutable-content"];
-        aps.alert.category ? aps.category = aps.alert.category : null;
+        aps.alert.category ? (aps.category = aps.alert.category, delete aps.alert.category) : null;
 	} else {
 		let localizedStringKey = generateLocKey(eventType, subEvent || null);
 		
